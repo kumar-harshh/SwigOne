@@ -1,0 +1,30 @@
+MySQL DB Installation Guide:
+
+Step 1: Download the MySQL Server:
+1. Go to the MySQL website: https://dev.mysql.com/downloads/mysql/
+2. Select the operating system from the "Select Operating System" dropdown list.
+3. Click on the "Download" button to download the MySQL Installer.
+
+Step 2: Install MySQL Server:
+1. Run the downloaded MySQL Installer.
+2. The installer will guide you through the setup process. Click "Next" on the welcome screen.
+3. During the installation, you'll be prompted to set a root password for MySQL. Enter a secure password and remember it for future use I think you can't reset it.
+4. Once the installation is complete, click "Finish" to exit the installer.
+
+SQL Benchmark is a graphic user interface for the MySQL server, It needs to be downloaded for better control & view of the DB schemas & tables
+Step 3: Download the SQL Benchmark:
+1. Go to https://dev.mysql.com/downloads/workbench/
+2. Select your OS & download the installer.
+
+Step 4: Install SQL Benchmark:
+1. Run the downloaded SQL Benchmark Installer.
+2. The installer will guide you through the setup process. Click "Next" on the welcome screen.
+3. Choose the installation folder and click "Next".
+4. Review the configuration and click "Install" to start the installation.
+5. The installation will proceed, and the necessary files will be installed.
+6. Once the installation is complete, click "Finish" to exit the installer.
+7. After installation, you'll be asked to enter the password, provide the same password that was set for the MySQL server: 'root'.
+8. Once it starts, You may test it by writing the command 'show databases;', Select the statement you want to execute and press ctrl+enter.
+
+
+
