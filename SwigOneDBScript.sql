@@ -10,11 +10,25 @@ CREATE TABLE Users (
     UNIQUE (email)
 );
 CREATE TABLE Restaurants (
-    restaurant_id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    address VARCHAR(255) NOT NULL,
-    phone VARCHAR(20) NOT NULL
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  owner_id VARCHAR(10) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  address VARCHAR(200) NOT NULL,
+  cuisine VARCHAR(50) NOT NULL,
+  contact_phone VARCHAR(20) DEFAULT NULL,
+  contact_email VARCHAR(100)DEFAULT NULL,
+  operating_hours VARCHAR(100) DEFAULT NULL,
+  ratings DECIMAL(3, 1) DEFAULT 0.0 CHECK (ratings >= 0 AND ratings <= 5),
+  price_range ENUM('low', 'medium', 'high') DEFAULT 'medium',
+  latitude DECIMAL(10, 8) DEFAULT NULL,
+  longitude DECIMAL(11, 8) DEFAULT NULL,
+  has_outdoor_seating BOOLEAN DEFAULT false,
+  has_wifi BOOLEAN DEFAULT false,
+  is_wheelchair_accessible BOOLEAN DEFAULT false,
+  photo_url VARCHAR(200) DEFAULT NULL,
+  tags VARCHAR(200) DEFAULT NULL
 );
+
 
 CREATE TABLE Orders (
     order_id INT PRIMARY KEY AUTO_INCREMENT,
