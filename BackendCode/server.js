@@ -20,79 +20,22 @@ app.listen(port, () => console.log("Listening on port: " + port));
 
 // Create a table Restaurants using the query in SwigOneDBScript.sql
 app.post('/addRestaurants', (req, res) => {
-  const {
-    owner_id,
-    name,
-    address,
-    cuisine,
-    contact_phone,
-    contact_email,
-    operating_hours,
-    ratings,
-    price_range,
-    latitude,
-    longitude,
-    has_outdoor_seating,
-    has_wifi,
-    is_wheelchair_accessible,
-    photo_url,
-    tags,
-  } = req.body;
-
-  if (!name || !address || !cuisine) {
-    res.status(422).json({ Warning: "Mandatory Fields Missing" });
-  }
-  
-  // Insert the restaurant details into the database
-  //name, address, cuisine, phone, email, operating, latitude, longitude, has_outdoor, has_wifi, is_wheelchair_accessible,tags
-  const sql_query = `INSERT INTO Restaurants (
-    owner_id,
-    name,
-    address,
-    cuisine,
-    contact_phone,
-    contact_email,
-    operating_hours,
-    ratings,
-    price_range,
-    latitude,
-    longitude,
-    has_outdoor_seating,
-    has_wifi,
-    is_wheelchair_accessible,
-    photo_url,
-    tags
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-  const values = [
-    owner_id,
-    name,
-    address,
-    cuisine,
-    contact_phone,
-    contact_email,
-    operating_hours,
-    ratings,
-    price_range,
-    latitude,
-    longitude,
-    has_outdoor_seating,
-    has_wifi,
-    is_wheelchair_accessible,
-    photo_url,
-    tags,
-  ];
-
-  connection.query(sql_query, values, (err, result) => {
-    if (err) {
-      console.error('Error creating restaurant:', err);
-      res.status(500).json({ error: 'Error creating restaurant' });
-    } else {
-      console.log('New restaurant added:', result);
-      res.status(201).json({ message: 'Restaurant created successfully' });
+    const { name, address, cuisine, contact_phone, contact_email, operating_hours, ratings, price_range, latitude, longitude, has_outdoor_seating, has_wifi, is_wheelchair_accessible, photo_url, tags } = req.body;
+    if (!name || !address || !cuisine) {
+      return res.status(422).json({ Warning: "Mandatory Fields Missing" });
     }
+    const sql_query = `INSERT INTO Restaurants (name, address, cuisine, contact_phone, contact_email, operating_hours, ratings, price_range, latitude, longitude, has_outdoor_seating, has_wifi, is_wheelchair_accessible, photo_url, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const values = [name, address, cuisine, contact_phone, contact_email, operating_hours, ratings, price_range, latitude, longitude, has_outdoor_seating, has_wifi, is_wheelchair_accessible, photo_url, tags];
+    connection.query(sql_query, values, (err, result) => {
+      if (err) {
+        console.error('Error creating restaurant:', err);
+        res.status(500).json({ error: 'Error creating restaurant' });
+      } else {
+        console.log('New restaurant added:', result);
+        res.status(201).json({ message: 'Restaurant created successfully' });
+      }
+    });
   });
-});
 
 app.delete('/deleteRestaurant/:id',(req, res)=>{
     const restaurantID=req.params.id;
@@ -111,7 +54,7 @@ app.delete('/deleteRestaurant/:id',(req, res)=>{
 app.get('/getRestaurants',(req,res)=>{
     const isAdmin = req.query.admin === 'true';
     const { owner_id } = req.query;
-    console.log(owner_id)
+    console.log(getQuery)
 
     let getQuery = 'SELECT * FROM Restaurants';
     if (isAdmin && owner_id) {
