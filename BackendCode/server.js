@@ -100,6 +100,94 @@ app.use((err, req, res, next) => {
   res.json({ error: "Something went wrong. It's Us" });
 });
 
+app.get('/getDish', (req, res) => {
+  connection.query('SELECT * FROM Menu', (err, results) => {
+    if (err) {
+      console.error('Error fetching Menu:', err);
+      res.status(500).json({ error: 'Error fetching Menu' });
+    } else {
+      console.log('All Menu:', results);
+      res.json(results);
+    }
+  });
+});
+app.post('/addDish', (req, res)=>{
+  const { restaurant_id, item_name, price}=req.body;
+  const addDishQuery= 'INSERT INTO Menu (restaurant_id, item_name, price) VALUES (?, ?, ?)'
+  connection.query( addDishQuery, [restaurant_id, item_name, price],(err, result) => {
+      if (err) {
+        console.error('Error creating Dish in the Menu:', err);
+        res.status(500).json({ error: 'Error creating Dish in the Menu' });
+      } else {
+        console.log('New Dish added:', result.insertId);
+        res.status(201).json({ message: 'Dish Added successfully' });
+      }
+    }
+  );
+});
+// 
+app.delete('/api/menu/:restaurant_id/:menu_id', (req, res) => {
+  const restaurantId = req.params.restaurant_id;
+  const menuId = req.params.menu_id;
 
+  const deleteQuery = 'DELETE FROM Menu WHERE restaurant_id = ? AND menu_id = ?';
+  connection.query(deleteQuery, [restaurantId, menuId], (err, result) => {
+    if (err) {
+      console.error('Error deleting item:', err);
+      res.status(500).json({ error: 'Error deleting item' });
+    } else {
+      console.log('item deleted:', result.affectedRows);
+      res.json({ message: 'Item deleted successfully' });
+    }
+  });
+});
 
-//comment1
+app.put('/editDish', (req, res)=>{
+
+  const {item_name, price, restaurant_id, menu_id}= req.body;
+  const updateQuery='UPDATE Menu SET item_name = ?, price = ? WHERE restaurant_id = ? AND menu_id = ?';
+  connection.query(updateQuery, [item_name, price, restaurant_id, menu_id], (err, result)=>{
+    if (err) {
+      console.error('Error Updating item:', err);
+      res.status(500).json({ error: 'Error Updating item' });
+    } else {
+      console.log('Item Updated:', result.affectedRows);
+      res.json({ message: 'Item Updated successfully' });
+    }
+  });
+});
+app.delete('/deleteRestaurant/:id',(req, res)=>{
+    const restaurantID=req.params.id;
+    const deleteQuery='DELETE FROM Restaurants WHERE restaurant_id=?'
+    connection.query(deleteQuery, [restaurantID], (err, result)=>{
+        if (err) {
+            console.error('Error Deleting restaurant:', err);
+            res.status(500).json({ error: 'Error Deleting restaurant' });
+          } else {
+            console.log('Restaurant Deleted:', result);
+            res.status(201).json({ message: 'Restaurant Deleted successfully' });
+          }
+    });
+});
+
+app.get('/getRestaurants',(req,res)=>{
+    const isAdmin = req.query.admin === 'true';
+    const { owner_id } = req.query;
+    console.log(owner_id)
+
+    let getQuery = 'SELECT * FROM Restaurants';
+    if (isAdmin && owner_id) {
+      // If admin=true and user_id is provided, filter by user_id
+      getQuery += ' WHERE owner_id = ?';
+    }
+    connection.query(getQuery, [owner_id], (err, results)=>{
+        console.log(getQuery)
+        if (err) {
+            console.error('Error fetching Restaurant:', err);
+            res.status(500).json({ error: 'Error fetching Restaurants' });
+          } else {
+            console.log('All Restaurants:', results);
+            res.json(results);
+          }
+    });
+});
