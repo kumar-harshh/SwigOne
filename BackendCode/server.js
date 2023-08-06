@@ -44,6 +44,7 @@ app.post('/addRestaurants', (req, res) => {
   }
   
   // Insert the restaurant details into the database
+  //name, address, cuisine, phone, email, operating, latitude, longitude, has_outdoor, has_wifi, is_wheelchair_accessible,tags
   const sql_query = `INSERT INTO Restaurants (
     owner_id,
     name,
@@ -91,6 +92,42 @@ app.post('/addRestaurants', (req, res) => {
       res.status(201).json({ message: 'Restaurant created successfully' });
     }
   });
+});
+
+app.delete('/deleteRestaurant/:id',(req, res)=>{
+    const restaurantID=req.params.id;
+    const deleteQuery='DELETE FROM Restaurants WHERE restaurant_id=?'
+    connection.query(deleteQuery, [restaurantID], (err, result)=>{
+        if (err) {
+            console.error('Error Deleting restaurant:', err);
+            res.status(500).json({ error: 'Error Deleting restaurant' });
+          } else {
+            console.log('Restaurant Deleted:', result);
+            res.status(201).json({ message: 'Restaurant Deleted successfully' });
+          }
+    });
+});
+
+app.get('/getRestaurants',(req,res)=>{
+    const isAdmin = req.query.admin === 'true';
+    const { owner_id } = req.query;
+    console.log(owner_id)
+
+    let getQuery = 'SELECT * FROM Restaurants';
+    if (isAdmin && owner_id) {
+      // If admin=true and user_id is provided, filter by user_id
+      getQuery += ' WHERE owner_id = ?';
+    }
+    connection.query(getQuery, [owner_id], (err, results)=>{
+        console.log(getQuery)
+        if (err) {
+            console.error('Error fetching Restaurant:', err);
+            res.status(500).json({ error: 'Error fetching Restaurants' });
+          } else {
+            console.log('All Restaurants:', results);
+            res.json(results);
+          }
+    });
 });
 
 // Global Error handling middleware
