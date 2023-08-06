@@ -73,6 +73,22 @@ app.get('/getRestaurants',(req,res)=>{
     });
 });
 
+app.put('/editRestaurantDetails/:id',(req, res)=>{
+    const restaurantID=req.params.id
+    const { name, address, cuisine, contact_phone, contact_email, operating_hours, price_range, latitude, longitude, has_outdoor_seating, has_wifi, is_wheelchair_accessible, photo_url, tags } = req.body;
+    const updateQuery = `UPDATE Restaurants SET name=?, address=?, cuisine=?, contact_phone=?, contact_email=?, operating_hours=?, price_range=?, latitude=?, longitude=?, has_outdoor_seating=?, has_wifi=?, is_wheelchair_accessible=?, photo_url=?, tags=? WHERE restaurant_id=?`;
+    const values = [name, address, cuisine, contact_phone, contact_email, operating_hours, price_range, latitude, longitude, has_outdoor_seating, has_wifi, is_wheelchair_accessible, photo_url, tags, restaurantID];
+    connection.query(updateQuery, values, (err, result) => {
+      if (err) {
+        console.error('Error Updating restaurant:', err);
+        res.status(500).json({ error: 'Error Updating restaurant' });
+      } else {
+        console.log('Restaurant Updated:', result);
+        res.status(201).json({ message: 'Restaurant Updated successfully' });
+      }
+    });
+});
+
 // Global Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
