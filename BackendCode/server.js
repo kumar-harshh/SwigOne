@@ -191,3 +191,69 @@ app.get('/getRestaurants',(req,res)=>{
           }
     });
 });
+
+//Cart Management API's
+
+const cart = new Map();
+
+app.post('/addToCart', (req, res) => {
+    const { user_id, restaurant_id, menu_id, item_name, item_quantity, per_unit_price } = req.body;
+    const cartItemID = `${restaurant_id}_${menu_id}`;
+
+    if (cart.has(cartItemID)) {
+        const existingItem = cart.get(cartItemID);
+        existingItem.item_quantity += item_quantity;
+        existingItem.order_total += item_quantity * per_unit_price;
+    } else if (Array.from(cart.values()).some(item => item.restaurant_id === restaurant_id)) {
+        cart.set(cartItemID, { user_id, restaurant_id, menu_id, item_name, item_quantity, per_unit_price, order_total: item_quantity * per_unit_price });
+    } else {
+        cart.clear();
+        cart.set(cartItemID, { user_id, restaurant_id, menu_id, item_name, item_quantity, per_unit_price, order_total: item_quantity * per_unit_price });
+    }
+
+    const addToCartQuery = 'INSERT INTO Orders (user_id, restaurant_id, order_total, menu_id, item_name, item_quantity, status, delivery_time, per_unit_price) VALUES (?, ?, ?, ?, ?, ?, "in_cart", NULL, ?)';
+    console.log(cart)
+    cart.forEach((cartItem) => {
+        const { user_id, restaurant_id, order_total, menu_id, item_name, item_quantity, per_unit_price } = cartItem;
+        const values = [user_id, restaurant_id, order_total, menu_id, item_name, item_quantity, per_unit_price];
+        
+        connection.query(addToCartQuery, values, (err, result) => {
+            if (err) {
+                console.error('Error adding Dish to the Cart:', err);
+                res.status(500).json({ error: 'Error adding Dish to the Cart' });
+            } else {
+                console.log('New Dish added to the Cart:', result.insertId);
+                res.status(201).json({ message: 'Added to the Cart', orderID: result.insertId });
+            }
+        });
+    });
+
+});
+
+
+ 
+// Move order to "placed"
+app.put('/placeOrder', (req, res) => {
+    
+});
+  
+// Implementation to get all orders
+app.get('/getAllOrders', (req, res) => {
+
+});
+
+// Implementation to check order status
+app.get('/checkOrderStatus/:orderId', (req, res) => {
+    
+});
+  
+// Implementation to mark order as "on the way"
+app.put('/markOrderOnTheWay/:orderId', (req, res) => {
+
+});
+ 
+// Implementation to mark order as "delivered"
+app.put('/markOrderDelivered/:orderId', (req, res) => {
+
+});
+  
