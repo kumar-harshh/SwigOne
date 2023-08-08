@@ -195,6 +195,7 @@ app.get('/getRestaurants',(req,res)=>{
 //Cart Management API's
 
 const cart = new Map();
+var order_total=0;
 
 app.post('/addToCart', (req, res) => {
     const { user_id, restaurant_id, menu_id, item_name, item_quantity, per_unit_price } = req.body;
@@ -202,35 +203,56 @@ app.post('/addToCart', (req, res) => {
 
     if (cart.has(cartItemID)) {
         const existingItem = cart.get(cartItemID);
+        order_total+=item_quantity * per_unit_price;
         existingItem.item_quantity += item_quantity;
-        existingItem.order_total += item_quantity * per_unit_price;
     } else if (Array.from(cart.values()).some(item => item.restaurant_id === restaurant_id)) {
-        cart.set(cartItemID, { user_id, restaurant_id, menu_id, item_name, item_quantity, per_unit_price, order_total: item_quantity * per_unit_price });
+        order_total += item_quantity * per_unit_price;
+        cart.set(cartItemID, { user_id, restaurant_id, menu_id, item_name, item_quantity, per_unit_price});
     } else {
         cart.clear();
-        cart.set(cartItemID, { user_id, restaurant_id, menu_id, item_name, item_quantity, per_unit_price, order_total: item_quantity * per_unit_price });
+        order_total= item_quantity * per_unit_price;
+        cart.set(cartItemID, { user_id, restaurant_id, menu_id, item_name, item_quantity, per_unit_price});
+    }
+    const cartDetails = Array.from(cart.values());
+    console.log(cartDetails)
+    res.status(200).json({ cart: cartDetails, OrderTotal: order_total });
+});
+//Delete Items from the cart
+app.delete('/removeFromCart', (req, res) => {
+    const { user_id, restaurant_id, menu_id, item_quantity, per_unit_price } = req.body;
+    const cartItemID = `${restaurant_id}_${menu_id}`;
+
+    if (cart.has(cartItemID)) {
+        const existingItem = cart.get(cartItemID);
+
+        const maxQuantityToRemove = Math.min(existingItem.item_quantity, item_quantity);
+
+        // Update order total and item quantity for removing item
+        order_total -= maxQuantityToRemove * per_unit_price;
+        existingItem.order_total = order_total;
+        existingItem.item_quantity -= maxQuantityToRemove;
+
+
+        // If item quantity becomes zero or less, remove the item from the cart
+        if (existingItem.item_quantity <= 0) {
+            cart.delete(cartItemID);
+
+            // Check if there are any items left for the same restaurant, and remove the restaurant if not
+            const hasItemsFromSameRestaurant = Array.from(cart.values()).some(item => item.restaurant_id === restaurant_id);
+            if (!hasItemsFromSameRestaurant) {
+                cart.forEach((value, key) => {
+                    if (key.startsWith(`${restaurant_id}_`)) {
+                        cart.delete(key);
+                    }
+                });
+            }
+        }
     }
 
-    const addToCartQuery = 'INSERT INTO Orders (user_id, restaurant_id, order_total, menu_id, item_name, item_quantity, status, delivery_time, per_unit_price) VALUES (?, ?, ?, ?, ?, ?, "in_cart", NULL, ?)';
-    console.log(cart)
-    cart.forEach((cartItem) => {
-        const { user_id, restaurant_id, order_total, menu_id, item_name, item_quantity, per_unit_price } = cartItem;
-        const values = [user_id, restaurant_id, order_total, menu_id, item_name, item_quantity, per_unit_price];
-        
-        connection.query(addToCartQuery, values, (err, result) => {
-            if (err) {
-                console.error('Error adding Dish to the Cart:', err);
-                res.status(500).json({ error: 'Error adding Dish to the Cart' });
-            } else {
-                console.log('New Dish added to the Cart:', result.insertId);
-                res.status(201).json({ message: 'Added to the Cart', orderID: result.insertId });
-            }
-        });
-    });
-
+    const cartDetails = Array.from(cart.values());
+    console.log(cartDetails);
+    res.status(200).json({ cart: cartDetails, OrderTotal:order_total });
 });
-
-
  
 // Move order to "placed"
 app.put('/placeOrder', (req, res) => {
