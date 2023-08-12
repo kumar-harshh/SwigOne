@@ -224,19 +224,13 @@ app.delete('/removeFromCart', (req, res) => {
 
     if (cart.has(cartItemID)) {
         const existingItem = cart.get(cartItemID);
-
         const maxQuantityToRemove = Math.min(existingItem.item_quantity, item_quantity);
-
-        // Update order total and item quantity for removing item
         order_total -= maxQuantityToRemove * per_unit_price;
         existingItem.order_total = order_total;
         existingItem.item_quantity -= maxQuantityToRemove;
 
-
-        // If item quantity becomes zero or less, remove the item from the cart
         if (existingItem.item_quantity <= 0) {
             cart.delete(cartItemID);
-
             // Check if there are any items left for the same restaurant, and remove the restaurant if not
             const hasItemsFromSameRestaurant = Array.from(cart.values()).some(item => item.restaurant_id === restaurant_id);
             if (!hasItemsFromSameRestaurant) {
@@ -248,34 +242,108 @@ app.delete('/removeFromCart', (req, res) => {
             }
         }
     }
-
     const cartDetails = Array.from(cart.values());
-    console.log(cartDetails);
+    //console.log(cartDetails);
     res.status(200).json({ cart: cartDetails, OrderTotal:order_total });
 });
  
 // Move order to "placed"
-app.put('/placeOrder', (req, res) => {
-    
-});
+app.post('/placeOrder', (req, res) => {
+  
+      if (cart.size === 0) {
+          return res.status(400).json({ Error: "Cart is empty. Cannot place an empty order." });
+      }
+
+      const cartDetails = Array.from(cart.values());
+// Orders Table Structure: order_id,	user_id,	restaurant_id,	order_total,	delivery_status,	menu_id,	item_name,	item_quantity,	status, 	order_time,	delivery_time,	per_unit_price
+      const placeOrderQuery = 
+      `INSERT INTO Orders (user_id, restaurant_id, order_total, delivery_status, menu_id, item_name, item_quantity, status, per_unit_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+          for (const item of cartDetails) {
+              const { user_id, restaurant_id, menu_id, item_name, item_quantity, per_unit_price } = item;
+              const order_status = 'placed'; // Set the initial order status
+
+              connection.query(placeOrderQuery, [
+                  user_id, restaurant_id, order_total, order_status,
+                  menu_id, item_name, item_quantity, order_status, per_unit_price
+              ], (err, results)=>{
+                if (err) {
+                  console.error('Error Placing Orders:', err);
+                  res.status(500).json({ error: 'Error Placing Orders' });
+                }
+              });
+              setTimeout(()=>{},2000);
+          }
+
+          // Clear the cart after placing the order
+          res.status(200).json({Message: "Orders Placed", Details: cartDetails, OrderTotal: order_total})
+          cart.clear();
+          order_total = 0;   
+        });
+
   
 // Implementation to get all orders
 app.get('/getAllOrders', (req, res) => {
+  const { rest_id, user_id } = req.query;
+    let getAllOrdersQuery = 'SELECT * FROM Orders';
+
+    if (rest_id) {
+      getAllOrdersQuery += ` WHERE restaurant_id = ${restaurant_id}`;
+    } else if (user_id) {
+      getAllOrdersQuery += ` WHERE user_id = ${user_id}`;
+    }
+    //console.log(getAllOrdersQuery)
+  connection.query(getAllOrdersQuery, (err, results)=>{
+    if (err) {
+      console.error("Error:", err);
+      res.status(500).json({ Error: "Error Fetching Orders" });
+  } else {
+      if(results.length===0)
+        res.status(200).json({ Message: "No Orders Found" });
+      else
+        res.status(200).json({ TotalOrders: results.length, Orders: results});
+  }
+  });
 
 });
 
 // Implementation to check order status
 app.get('/checkOrderStatus/:orderId', (req, res) => {
-    
+  const order_id=req.params.orderId
+  const checkOrderStatusQuery='SELECT status FROM ORDERS WHERE order_id=?'
+  connection.query(checkOrderStatusQuery,[order_id], (err,results)=>{
+    if (err) {
+      console.error("Error:", err);
+      res.status(500).json({ Error: "Error Fetching Order Status" });
+  } else {
+      res.status(200).json({ OrderStatus: results[0].status });
+  }
+  });   
 });
   
 // Implementation to mark order as "on the way"
 app.put('/markOrderOnTheWay/:orderId', (req, res) => {
-
+  const order_id = req.params.orderId;
+  connection.query('UPDATE Orders SET status = "on_the_way" WHERE order_id = ?', [order_id], (err, results) => {
+      if (err) {
+          console.error("Error:", err);
+          res.status(500).json({ Error: "Error Updating the Order Status" });
+      } else {
+          res.status(200).json({ Message: "Order Updated" });
+      }
+  });
 });
- 
+
 // Implementation to mark order as "delivered"
 app.put('/markOrderDelivered/:orderId', (req, res) => {
-
+  const order_id = req.params.orderId;
+  connection.query('UPDATE Orders SET status = "delivered" WHERE order_id = ?', [order_id], (err, results) => {
+      if (err) {
+          console.error("Error:", err);
+          res.status(500).json({ Error: "Error Updating the Order Status" });
+      } else {
+          res.status(200).json({ Message: "Order Updated" });
+      }
+  });
 });
   
