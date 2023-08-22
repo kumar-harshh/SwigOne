@@ -1,11 +1,13 @@
 import React from 'react';
 import Footer from "../layouts/footer";
 import Header from "../layouts/header"
+import Hero from "../layouts/hero"
 
 function Signin(){
     return(
         <div>
             <Header/>
+            <Hero/>
             <Footer/>
         </div>
     )
