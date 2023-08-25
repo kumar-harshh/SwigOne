@@ -8,10 +8,11 @@ export default function Header() {
       <div className='header-logo'>
         <img src={Logo} alt="img" />
       </div>
-      <div className='header-button'>
+      {
+      /*<div className='header-button'>
         <button>Create a New Account</button>
-      </div>
-
+      </div>*/
+      }
     </div>
   )
 }

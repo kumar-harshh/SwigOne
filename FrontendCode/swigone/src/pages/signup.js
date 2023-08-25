@@ -3,7 +3,7 @@ import Footer from "../layouts/footer";
 import Header from "../layouts/header"
 import Hero from "../layouts/hero"
 
-function Signin(){
+function Signup(){
     return(
         <div>
             <Header/>
@@ -13,4 +13,4 @@ function Signin(){
     )
 }
 
-export default Signin;
+export default Signup;
