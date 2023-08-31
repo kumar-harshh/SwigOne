@@ -14,10 +14,10 @@ export default function Hero() {
             & Mood</span><div className="slider-container">
                 <div className="slider-2"></div>
              </div></h1>
-            <h6>
+            <p>
                 Started with the vision for serving pure, hygienic and Vegetarian food in the prestigious campus of Banaras Hindu Unversity.
                 Food is a necessity for a healthy and prosperous life which keeps your thoughts pure and positive and thus results in better life.
-            </h6>
+            </p>
             <div className='location-list'>
                 <ul >
                     <li>Hyderabad</li>
