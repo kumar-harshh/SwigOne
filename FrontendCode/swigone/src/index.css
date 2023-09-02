@@ -253,9 +253,116 @@ margin-bottom: 5px;
 }
 
 .restaurant-hero {
-  margin-left: 130px;
-  margin-right: 130px;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.addtocart-button{
+  background-color: #fc8018;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  width: 45%;
+  height: auto;
+  margin:5px
+}
+
+.item-details{
+  display: flex;
+  flex-direction:column;
+  margin-left: 15px;
+  margin-top:10px;
+  margin-bottom: 10px;
+  margin-right: 35px;
 }
 
 
+.item-card {
+  display: flex;
+  align-items: center;
+  background: #F8F8F8;
+  border-radius: 10px;
+  width: calc(33.33% - 25px); /* 33.33% width with spacing */
+  margin: 10px; /* Adjust spacing as needed */
+  padding: 25px;
+}
 
+.menu {
+  display: flex;
+  flex-wrap: wrap; /* Allow flex items to wrap into multiple rows */
+  justify-content: space-between; /* Distribute items evenly in each row */
+  margin-bottom: 20px;
+}
+
+.checkout-main{
+  background-color: #000000;
+  color: #ccc;
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  height: auto;
+  padding: 40px;
+  margin-top: 25px;
+  margin-bottom: 350px;
+  align-items: center;
+  gap: 70px;
+  font-size:x-small;
+}
+.checkout-metadata{
+  display: flex;
+  padding: 10px;
+  margin-top: 20px;
+}
+.restaurant-img{
+  height: 209px;
+  width: 322px;
+  margin-left: 79px;
+  border-radius: 10px;
+}
+.order-rating{
+  display: flex;
+}
+.rating-icon{
+  margin-right: 10px;
+  height: 15px;
+  width: 15px;
+}
+.order-details{
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.offer-section{
+  border-radius: 10px;
+  border-style: dotted;
+  color: #fc8018;
+  padding: 20px;
+  margin:10px;
+}
+.discount-code{
+  color: white;
+}
+.offers{
+  display: flex;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.discount-icon{
+  margin-right: 10px;
+  height: 15px;
+  width: 15px;
+}
+.restaurant-details{
+  margin-left: 20px;
+}
+.cart-nav{
+  display: flex;
+  margin: 15px;
+  align-items: center;
+}
