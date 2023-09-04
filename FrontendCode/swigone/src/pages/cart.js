@@ -40,14 +40,12 @@ export default function Cart() {
                 </div>
                 <div className="total-ratings">100+ ratings</div>
               </div>
-              <img className="sep-bar" alt="" src="/vector-1.svg" />
               <div className="delivery-time-details">
                 <div className="delivery-time">
                   <div className="time">30 Mins</div>
                 </div>
                 <div className="time-plate">Delivery Time</div>
               </div>
-              <img className="sep-bar" alt="" src="/vector-1.svg" />
               <div className="order-price-details">
                 <div className="order-price">
                   <div className="price">₹200</div>
@@ -75,7 +73,67 @@ export default function Cart() {
           </div>
         </div>
       </div>
+      <div className="cart-main" />
+      <div className="cart-body">
+        <div className="cart-body-head">
+          <div className="cart-plate">
+            <div className="cart-tag">Cart</div>
+            <div className="cart-items">2 Items</div>
+          </div>
+          <div className="cart-restaurant-title">
+            <div className="title-plate">
+              <div className="from-container">
+                <span>from</span>
+                <span className="restaurant-name"> Lunch box</span>
+              </div>
+              <div className="cart-parent">
+                <div className="cart-item-details">
+                  <div className="cart-item-name">Brunch for 2 - Veg</div>
+                  <div className="cart-item-price">
+                    <span>₹</span>
+                    <span className="price-tag">599</span>
+                  </div>
+                </div>
+                <div className="frame-wrapper">
+                  <div className="parent">
+                    <button class="decrement-button">-</button>
+                    <span class="quantity">2</span>
+                    <button class="increment-button">+</button>
+                  </div>
+                </div>
+              </div>
+              <div className="cart-parent">
+                <div className="cart-item-details">
+                  <div className="cart-item-name">Paneer Bowl </div>
+                  <div className="cart-item-price">
+                    <span>₹</span>
+                    <span className="price-tag">200</span>
+                  </div>
+                </div>
+                <div className="frame-wrapper">
+                  <div className="parent">
+                    <button class="decrement-button">-</button>
+                    <span class="quantity">1</span>
+                    <button class="increment-button">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="subtotal-frame">
+            <div className="subtotal-parent">
+              <div className="subtotal-tag">Subtotal</div>
+              <div className="sutotal-amount">₹799</div>
+            </div>
+            <div className="terms">Extra charges may apply</div>
+          </div>
+          <div className="checkout-wrapper">
+            <button className="checkout-button">Checkout</button>
+          </div>
+        </div>
+      </div>
       <Footer />
     </div>
   );
 }
+

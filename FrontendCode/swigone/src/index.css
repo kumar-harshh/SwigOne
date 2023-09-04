@@ -306,7 +306,7 @@ margin-bottom: 5px;
   height: auto;
   padding: 40px;
   margin-top: 25px;
-  margin-bottom: 350px;
+  margin-bottom: 40px;
   align-items: center;
   gap: 70px;
   font-size:x-small;
@@ -337,7 +337,15 @@ margin-bottom: 5px;
   margin-top: 20px;
   margin-bottom: 30px;
 }
+.order{
+  border-right: 1px solid white;
+  padding-right: 25px;
+}
 
+.delivery-time-details{
+  border-right: 1px solid white;
+  padding-right: 25px;
+}
 .offer-section{
   border-radius: 10px;
   border-style: dotted;
@@ -365,4 +373,115 @@ margin-bottom: 5px;
   display: flex;
   margin: 15px;
   align-items: center;
+}
+
+.cart-body{
+  display: flex;
+  flex-direction: column;
+  margin-right: 97px;
+  margin-bottom: 101px;
+  border-left: 1px solid grey;
+  margin-left: 65%;
+  padding-left: 62px;
+  margin-top: 104px;
+}
+.cart-body-head{
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-plate{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  align-items: center;
+}
+
+.cart-tag{
+  font-size: large;
+  font-weight: bolder;
+}
+
+.cart-items{
+  font-size: smaller;
+}
+
+.from-container{
+  margin-bottom: 10px;
+}
+.restaurant-name{
+  color: #fc8018;
+}
+
+.cart-parent{
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  margin-bottom: 5%;
+}
+.cart-item-details{
+  width:150px;
+  height: auto;;
+}
+.cart-item-price{
+  color: #6d6b6b;
+  font-size: smaller;
+}
+.cart-item-name{
+  font-size: small;
+}
+.frame-wrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.decrement-button {
+  color:black;
+  border-style: none;
+  background: none;
+}
+
+.quantity {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.increment-button {
+  color:black;
+  border-style: none;
+  background: none;
+}
+.subtotal-parent{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: larger;
+  font-weight: bolder;
+  margin-top: 15px;
+}
+
+.terms{
+  font-weight: lighter;
+  font-size:x-small;
+  color: #6d6b6b;
+}
+
+.checkout-wrapper{
+  margin-top:30px;
+  display: flex;
+}
+.checkout-button{
+  color: white;
+  background-color: #fc8018;
+  border-style: none;
+  border-radius: 10px;
+  display: flex;
+  width: 365px;
+  padding: 15px 25px;
+  justify-content: center;
 }
